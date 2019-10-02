@@ -57,6 +57,7 @@ class Konto(models.Model):
 
     class Meta:
         verbose_name_plural = 'Konten'
+        ordering = ['name', ]
 
 
 class Buchung(models.Model):
@@ -71,6 +72,14 @@ class Buchung(models.Model):
     beschreibung = models.CharField(max_length=100, default='')
     is_multibuchung = models.BooleanField(default=False)
     betrag = models.FloatField()
+
+    def __str__(self):
+        date_time = self.datum.strftime("%d.%m.%Y %H:%M")
+        return date_time + '_' + self.beschreibung
+
+    class Meta:
+        verbose_name_plural = 'Buchungen'
+        ordering = ['datum', ]
 
 
 class MultiBuchung(models.Model):

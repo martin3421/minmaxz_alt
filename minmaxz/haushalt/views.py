@@ -9,7 +9,7 @@ from haushalt.models import KontoTyp, DeviseWertpapierTyp, DeviseWertpapier, Kon
 def data_import(request, modus):
     print(os.getcwd())
     konten = pd.read_csv(
-        '/home/martin/Dokumente/dbmodeldev/dbdev/haushalt/konten.csv', delimiter=';')
+        '/home/martin/Dokumente/minmaxz/minmaxz/haushalt/konten.csv', delimiter=';')
     konten_header = list(konten.columns.values)
 #    print(konten_header)
     if modus == 'import':
@@ -86,5 +86,5 @@ def data_import(request, modus):
                 platzhalter=plzhalt,
             )
 
-    return render(request, 'haushalt/data_import.html', {'konten': konten.values,
+    return render(request, 'haushalt/import.html', {'konten': konten.values,
                                                          'konten_header': konten_header})

@@ -10,6 +10,12 @@ pylint = "*"
 [packages]
 django = "*"
 pandas = "*"
+djangorestframework = "*"
+markdown = "*"
+django-filter = "*"
+django-rest-auth = "*"
+django-rest-knox = "*"
+django-allauth = "*"
 
 [requires]
 python_version = "3.6"
