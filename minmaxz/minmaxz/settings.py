@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'knox',
     'accounts',
     'haushalt',
+    'frontend',
 ]
 
 MIDDLEWARE = [

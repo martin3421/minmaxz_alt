@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils import timezone
+import datetime
 
 
 # Create your models here.
@@ -61,7 +61,7 @@ class Konto(models.Model):
 
 
 class Buchung(models.Model):
-    datum = models.DateTimeField(default=timezone.now)
+    datum = models.DateField(default=datetime.date.today)
     konto1 = models.ForeignKey(
         Konto, on_delete=models.SET_NULL, related_name='abbuchung', null=True)
     konto2 = models.ForeignKey(
@@ -74,7 +74,7 @@ class Buchung(models.Model):
     betrag = models.FloatField()
 
     def __str__(self):
-        date_time = self.datum.strftime("%d.%m.%Y %H:%M")
+        date_time = self.datum.strftime("%d.%m.%Y")
         return date_time + '_' + self.beschreibung
 
     class Meta:
