@@ -38,6 +38,13 @@ export class BuchungForm extends Component {
         const { datum, konto1, konto2, beschreibung, betrag } = this.state;
         const buchung = { datum, konto1, konto2, beschreibung, betrag };
         this.props.addBuchung(buchung);
+        this.setState({
+            datum: "",
+            konto1: "",
+            konto2: "",
+            beschreibung: "",
+            betrag: ""
+        });
     };
 
     render() {

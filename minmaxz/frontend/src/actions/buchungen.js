@@ -1,4 +1,5 @@
 import axios from "axios";
+import { createMessage, returnErrors } from "./messages";
 
 import { GET_BUCHUNGEN, DELETE_BUCHUNG, ADD_BUCHUNG, GET_ERRORS } from "./types";
 
@@ -22,6 +23,7 @@ export const deleteBuchung = (id) => dispatch => {
     axios
         .delete(`/haushalt/api/buchungen/${id}/`)
         .then(res => {
+            dispatch(createMessage({ deleteBuchung: "Buchung gelöscht" }));
             dispatch({
                 type: DELETE_BUCHUNG,
                 payload: id
@@ -37,6 +39,7 @@ export const addBuchung = (buchung) => dispatch => {
     axios
         .post("/haushalt/api/buchungen/", buchung)
         .then(res => {
+            dispatch(createMessage({ addBuchung: "Buchung hinzugefügt" }));
             dispatch({
                 type: ADD_BUCHUNG,
                 payload: res.data
