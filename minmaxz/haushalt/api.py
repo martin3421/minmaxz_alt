@@ -6,22 +6,26 @@ from .serializers import BuchungSerializer, KontoSerializer
 
 
 class BuchungViewSet(viewsets.ModelViewSet):
-    queryset = Buchung.objects.all()
     permission_classes = [
-        permissions.AllowAny,
+        permissions.IsAuthenticated,
     ]
     serializer_class = BuchungSerializer
 
-    """def get_queryset(self):
-        return self.request.user.leads.all()
+    def get_queryset(self):
+        return Buchung.objects.filter(owner=self.request.user)
 
-    def perform_create(self, serializer):
+    """def perform_create(self, serializer):
         serializer.save(owner=self.request.user)"""
 
 
 class KontoViewSet(viewsets.ModelViewSet):
-    queryset = Konto.objects.all()
     permission_classes = [
-        permissions.AllowAny,
+        permissions.IsAuthenticated,
     ]
     serializer_class = KontoSerializer
+
+    def get_queryset(self):
+        return self.request.user.konten.all()
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)

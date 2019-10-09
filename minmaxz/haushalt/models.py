@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 import datetime
 
 
@@ -51,6 +52,8 @@ class Konto(models.Model):
     versteckt = models.BooleanField(default=False)
     steuerrelevant = models.BooleanField(default=False)
     platzhalter = models.BooleanField(default=False)
+    owner = models.ForeignKey(User, related_name='konten',
+                              on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.name
