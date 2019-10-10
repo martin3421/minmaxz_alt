@@ -1,10 +1,19 @@
 import React, { Component, Fragment } from 'react'
 import ReactDOM from "react-dom";
+import {
+    HashRouter as Router,
+    Route,
+    Switch,
+    Redirect
+  } from "react-router-dom";
 import Header from './layout/Header';
 import Dashboard from './haushalt/buchungen/Dashboard';
 import Alerts from "./layout/Alerts";
-import { Container } from 'semantic-ui-react'
+import Login from "./accounts/Login";
+import Register from "./accounts/Register";
+import PrivateRoute from "./common/PrivateRoute";
 
+import { Container } from 'semantic-ui-react'
 import { Provider as AlertProvider } from 'react-alert';
 import AlertTemplate from 'react-alert-template-basic';
 
@@ -22,13 +31,19 @@ export class App extends Component {
         return (
             <Provider store={store}>
                 <AlertProvider template={AlertTemplate} {...alertOptions}>
+                    <Router>
                     <Fragment>
                         <Header />
                         <Alerts />
                         <Container>
-                            <Dashboard />
+                            <Switch>
+                            <PrivateRoute exact path="/" component={Dashboard} />
+                            <Route exact path="/register" component={Register} />
+                            <Route exact path="/login" component={Login} />
+                            </Switch>
                         </Container>
                     </Fragment>
+                    </Router>
                 </AlertProvider>
             </Provider>
         )

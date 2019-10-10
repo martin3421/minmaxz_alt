@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Menu, Segment } from 'semantic-ui-react'
+import { Link } from "react-router-dom";
 
 
 
@@ -17,16 +18,16 @@ export class Header extends Component {
                         active={activeItem === 'home'}
                         onClick={this.handleItemClick}
                     />
-                    <Menu.Item
-                        name='messages'
-                        active={activeItem === 'messages'}
-                        onClick={this.handleItemClick}
-                    />
-                    <Menu.Item
-                        name='friends'
-                        active={activeItem === 'friends'}
-                        onClick={this.handleItemClick}
-                    />
+
+                    <Menu.Menu position="right">
+                        <Menu.Item as={ Link } name="login" to="login">
+                            Login
+                        </Menu.Item>
+
+                        <Menu.Item as={ Link } name="register" to="register">
+                            Register
+                        </Menu.Item>
+                    </Menu.Menu>
                 </Menu>
             </Segment>
         )

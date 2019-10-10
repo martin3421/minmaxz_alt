@@ -1,4 +1,5 @@
 import axios from "axios";
+import { createMessage, returnErrors } from "./messages";
 
 import { GET_KONTEN } from "./types";
 
@@ -13,6 +14,6 @@ export const getKonten = () => dispatch => {
             });
         })
         .catch(err =>
-            console.log(err)
+            dispatch(returnErrors(err.response.data, err.response.status))
         );
 };
