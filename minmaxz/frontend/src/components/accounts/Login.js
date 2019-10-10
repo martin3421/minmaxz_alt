@@ -13,29 +13,28 @@ import {
 } from 'semantic-ui-react';
 
 export class Login extends Component {
-  state = {
-    username: "",
-    password: ""
-  };
+    state = {
+        username: "",
+        password: ""
+    };
 
-  static propTypes = {
-    login: PropTypes.func.isRequired,
-    isAuthenticated: PropTypes.bool
-  };
+    static propTypes = {
+        login: PropTypes.func.isRequired,
+        isAuthenticated: PropTypes.bool
+    };
 
-  onSubmit = e => {
-    console.log("hello")
-    e.preventDefault();
-    this.props.login(this.state.username, this.state.password);
-  };
+    onSubmit = e => {
+        e.preventDefault();
+        this.props.login(this.state.username, this.state.password);
+    };
 
-  onChange = e => this.setState({ [e.target.name]: e.target.value });
+    onChange = e => this.setState({ [e.target.name]: e.target.value });
 
-  render() {
-    if (this.props.isAuthenticated) {
-      return <Redirect to="/" />;
-    }
-    const { username, password } = this.state;
+    render() {
+        if (this.props.isAuthenticated) {
+            return <Redirect to="/" />;
+        }
+        const { username, password } = this.state;
         return (
             <Grid centered columns={2}>
                 <Grid.Column>
@@ -62,8 +61,8 @@ export class Login extends Component {
                                 onChange={this.onChange}
                                 value={password}
                             />
-                            <Button 
-                                color="blue" 
+                            <Button
+                                color="blue"
                                 fluid size="large"
                                 type="submit"
                                 onClick={this.onSubmit}
@@ -83,8 +82,8 @@ export class Login extends Component {
 
 const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated
-  });
-  export default connect(
+});
+export default connect(
     mapStateToProps,
     { login }
-  )(Login);
+)(Login);
