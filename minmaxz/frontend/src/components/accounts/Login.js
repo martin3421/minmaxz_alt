@@ -42,7 +42,7 @@ export class Login extends Component {
                         Login
               </Header>
                     <Segment>
-                        <Form size="large">
+                        <Form size="large" onSubmit={this.onSubmit}>
                             <Form.Input
                                 fluid
                                 icon="user"
@@ -65,14 +65,13 @@ export class Login extends Component {
                                 color="blue"
                                 fluid size="large"
                                 type="submit"
-                                onClick={this.onSubmit}
                             >
                                 Login
                             </Button>
                         </Form>
                     </Segment>
                     <Message>
-                        Not registered yet? <a href="#">Sign Up</a>
+                        Not registered yet? <Link to="/register">Register</Link>
                     </Message>
                 </Grid.Column>
             </Grid>

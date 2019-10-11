@@ -23,6 +23,9 @@ export class Header extends Component {
 
         const authLinks = (
             <Menu.Menu position="right">
+                <Menu.Item>
+                {user ? `Welcome ${user.username}` : ""}
+                </Menu.Item>
                 <Menu.Item
                     name="logout"
                     onClick={this.props.logout}>

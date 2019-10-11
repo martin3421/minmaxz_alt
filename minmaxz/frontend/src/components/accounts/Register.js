@@ -1,4 +1,9 @@
 import React, { Component } from 'react'
+import { Link, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { register } from "../../actions/auth";
+import { createMessage } from "../../actions/messages";
 import {
     Button,
     Form,
@@ -16,22 +21,41 @@ export class Register extends Component {
         password2: ""
     };
 
-    onSubmit = e => {
+    static propTypes = {
+        register: PropTypes.func.isRequired,
+        isAuthenticated: PropTypes.bool
+      };
+
+      onSubmit = e => {
         e.preventDefault();
-        console.log('submit')
-    }
+        const { username, email, password1, password2 } = this.state;
+        if (password1 !== password2) {
+          this.props.createMessage({ passwordNotMatch: "Passwords do not match" });
+        } else {
+          const newUser = {
+            username,
+            email,
+            password1,
+            password2
+        };
+          this.props.register(newUser);
+        }
+      };
 
     onChange = e => this.setState({ [e.target.name]: e.target.value });
     render() {
+        if (this.props.isAuthenticated) {
+            return <Redirect to="/" />;
+          }
         const { username, email, password1, password2 } = this.state;
         return (
             <Grid centered columns={2}>
                 <Grid.Column>
                     <Header as="h2" textAlign="center">
-                        Login
+                        Register
               </Header>
                     <Segment>
-                        <Form size="large">
+                        <Form size="large" onSubmit={this.onSubmit}>
                             <Form.Input
                                 fluid
                                 icon="user"
@@ -55,6 +79,7 @@ export class Register extends Component {
                                 icon="lock"
                                 iconPosition="left"
                                 name="password1"
+                                type="password"
                                 onChange={this.onChange}
                                 value={password1}
                             />
@@ -63,6 +88,7 @@ export class Register extends Component {
                                 icon="lock"
                                 iconPosition="left"
                                 name="password2"
+                                type="password"
                                 onChange={this.onChange}
                                 value={password2}
                             />
@@ -76,7 +102,7 @@ export class Register extends Component {
                         </Form>
                     </Segment>
                     <Message>
-                        Not registered yet? <a href="#">Sign Up</a>
+                    Already have an account? <Link to="/login">Login</Link>
                     </Message>
                 </Grid.Column>
             </Grid>
@@ -84,4 +110,11 @@ export class Register extends Component {
     }
 }
 
-export default Register
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+  });
+  
+  export default connect(
+    mapStateToProps,
+    { register, createMessage }
+  )(Register);

@@ -2,11 +2,12 @@ import axios from "axios";
 import { createMessage, returnErrors } from "./messages";
 
 import { GET_BUCHUNGEN, DELETE_BUCHUNG, ADD_BUCHUNG } from "./types";
+import { tokenConfig } from "./auth";
 
 // GET BUCHUNGEN
-export const getBuchungen = () => dispatch => {
+export const getBuchungen = () => (dispatch, getState) => {
     axios
-        .get("/haushalt/api/buchungen/")
+        .get("/haushalt/api/buchungen/", tokenConfig(getState))
         .then(res => {
             dispatch({
                 type: GET_BUCHUNGEN,
