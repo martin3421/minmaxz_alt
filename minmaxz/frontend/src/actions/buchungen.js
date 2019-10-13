@@ -20,9 +20,9 @@ export const getBuchungen = () => (dispatch, getState) => {
 };
 
 // DELETE BUCHUNG
-export const deleteBuchung = (id) => dispatch => {
+export const deleteBuchung = (id) => (dispatch, getState) => {
     axios
-        .delete(`/haushalt/api/buchungen/${id}/`)
+        .delete(`/haushalt/api/buchungen/${id}/`, tokenConfig(getState))
         .then(res => {
             dispatch(createMessage({ deleteBuchung: "Buchung gelöscht" }));
             dispatch({
@@ -36,9 +36,9 @@ export const deleteBuchung = (id) => dispatch => {
 };
 
 // ADD BUCHUNG
-export const addBuchung = (buchung) => dispatch => {
+export const addBuchung = (buchung) => (dispatch, getState) => {
     axios
-        .post("/haushalt/api/buchungen/", buchung)
+        .post("/haushalt/api/buchungen/", buchung, tokenConfig(getState))
         .then(res => {
             dispatch(createMessage({ addBuchung: "Buchung hinzugefügt" }));
             dispatch({
@@ -46,6 +46,6 @@ export const addBuchung = (buchung) => dispatch => {
                 payload: res.data
             });
         })
-        .catch(err => 
+        .catch(err =>
             dispatch(returnErrors(err.response.data, err.response.status)));
 };
