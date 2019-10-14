@@ -76,15 +76,13 @@ def data_import(request, modus):
                 kontotyp=KontoTyp.objects.get(name=row['Typ']),
                 elternkonto=parent,
                 name=row['Name'],
-                kontonummer=konto_nr,
                 beschreibung=beschr,
-                bemerkung=bemerk,
                 devise_wertpapier=DeviseWertpapier.objects.get(
                     symbol=row['Devise/Wertpapier M']),
-                versteckt=verst,
                 steuerrelevant=strelev,
                 platzhalter=plzhalt,
+                owner=request.user,
             )
 
     return render(request, 'haushalt/import.html', {'konten': konten.values,
-                                                         'konten_header': konten_header})
+                                                    'konten_header': konten_header})

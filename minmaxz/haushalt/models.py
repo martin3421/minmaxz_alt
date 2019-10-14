@@ -43,17 +43,14 @@ class Konto(models.Model):
     kontotyp = models.ForeignKey(KontoTyp, on_delete=models.CASCADE)
     elternkonto = models.ForeignKey('self', on_delete=models.CASCADE,
                                     null=True, blank=True, related_name='eltern_konto')
-    name = models.CharField(max_length=100, unique=True)
-    kontonummer = models.IntegerField(null=True)
-    beschreibung = models.CharField(max_length=100, null=True)
-    bemerkung = models.CharField(max_length=100, null=True)
+    name = models.CharField(max_length=100)
+    beschreibung = models.CharField(max_length=100, null=True, blank=True)
     devise_wertpapier = models.ForeignKey(
         DeviseWertpapier, on_delete=models.CASCADE)
-    versteckt = models.BooleanField(default=False)
     steuerrelevant = models.BooleanField(default=False)
     platzhalter = models.BooleanField(default=False)
-    owner = models.ForeignKey(User, related_name='konten',
-                              on_delete=models.CASCADE, blank=True, null=True)
+    owner = models.ForeignKey(
+        User, related_name='konten', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -61,6 +58,10 @@ class Konto(models.Model):
     class Meta:
         verbose_name_plural = 'Konten'
         ordering = ['name', ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'owner'], name="konto_owner")
+        ]
 
 
 class Buchung(models.Model):

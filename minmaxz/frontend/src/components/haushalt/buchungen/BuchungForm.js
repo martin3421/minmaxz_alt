@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button, Form, Dropdown } from 'semantic-ui-react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addBuchung } from "../../../actions/buchungen";
+import { addBuchung, getBuchungen } from "../../../actions/buchungen";
 import { getKonten } from "../../../actions/konten";
 
 
@@ -17,11 +17,13 @@ export class BuchungForm extends Component {
 
     static propTypes = {
         addBuchung: PropTypes.func.isRequired,
-        getKonten: PropTypes.func.isRequired
+        getKonten: PropTypes.func.isRequired,
+        getBuchungen: PropTypes.func.isRequired
     };
 
     componentDidMount() {
         this.props.getKonten();
+        this.props.getBuchungen();
     }
 
     onChange = e => this.setState({
@@ -31,6 +33,11 @@ export class BuchungForm extends Component {
 
     onKontoChange = (e, data) => {
         this.setState({ [data.name]: data.value });
+    }
+
+    onBeschreibungChange = (e, data) => {
+        this.setState({ [data.name]: data.value })
+        console.log(data.value)
     }
 
     onSubmit = e => {
@@ -48,12 +55,19 @@ export class BuchungForm extends Component {
     };
 
     render() {
-        const { datum, beschreibung, betrag } = this.state;
+        const { datum, betrag } = this.state;
         const kontoOptions = this.props.konten.map(konto => (
             {
                 key: konto.id,
                 text: konto.name,
                 value: konto.id
+            }
+        ))
+        const beschreibungOptions = this.props.buchungen.map(buchung => (
+            {
+                key: buchung.id,
+                text: buchung.beschreibung,
+                value: buchung.id
             }
         ))
         return (
@@ -66,12 +80,18 @@ export class BuchungForm extends Component {
                             value={datum}
                             name="datum"
                             width={3} />
-                        <Form.Input
-                            label='Beschreibung'
-                            onChange={this.onChange}
-                            value={beschreibung}
-                            name="beschreibung"
-                            width={9} />
+                        <Form.Field width={9}>
+                            <label>Beschreibung</label>
+                            <Dropdown
+                                fluid
+                                search
+                                selection
+                                allowAdditions
+                                onChange={this.onBeschreibungChange}
+                                placeholder='Beschreibung'
+                                options={beschreibungOptions}
+                                name="beschreibung" />
+                        </Form.Field>
                     </Form.Group>
                     <Form.Group>
                         <Form.Field width={5}>
@@ -113,10 +133,11 @@ export class BuchungForm extends Component {
 }
 
 const mapStateToProps = state => ({
-    konten: state.konten.konten
+    konten: state.konten.konten,
+    buchungen: state.buchungen.buchungen
 });
 
 export default connect(
     mapStateToProps,
-    { getKonten, addBuchung }
+    { getBuchungen, getKonten, addBuchung }
 )(BuchungForm);
