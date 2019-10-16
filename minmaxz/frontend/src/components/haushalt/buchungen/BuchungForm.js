@@ -31,12 +31,19 @@ export class BuchungForm extends Component {
             e.target.value
     });
 
+    handleAddition = (e, { value }) => {
+        this.setState((prevState) => ({
+          options: [{ text: value, value }, ...prevState.options],
+        }))
+      }
+
     onKontoChange = (e, data) => {
         this.setState({ [data.name]: data.value });
     }
 
     onBeschreibungChange = (e, data) => {
         this.setState({ [data.name]: data.value })
+        console.log(this.props.buchungen.id)
         console.log(data.value)
     }
 
@@ -90,6 +97,7 @@ export class BuchungForm extends Component {
                                 onChange={this.onBeschreibungChange}
                                 placeholder='Beschreibung'
                                 options={beschreibungOptions}
+                                onAddItem={this.handleAddition}
                                 name="beschreibung" />
                         </Form.Field>
                     </Form.Group>
