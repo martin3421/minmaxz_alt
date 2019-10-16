@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { addBuchung, getBuchungen } from "../../../actions/buchungen";
 import { getKonten } from "../../../actions/konten";
 
-
 export class BuchungForm extends Component {
     state = {
         datum: "",
@@ -33,18 +32,18 @@ export class BuchungForm extends Component {
 
     handleAddition = (e, { value }) => {
         this.setState((prevState) => ({
-          options: [{ text: value, value }, ...prevState.options],
+            options: [{ text: value, value }, ...prevState.options],
         }))
-      }
+    }
 
     onKontoChange = (e, data) => {
         this.setState({ [data.name]: data.value });
     }
 
     onBeschreibungChange = (e, data) => {
+        console.log(data.name, data.value)
         this.setState({ [data.name]: data.value })
-        console.log(this.props.buchungen.id)
-        console.log(data.value)
+        const buchung = this.props.buchungen.find(x => x.id === data.value)
     }
 
     onSubmit = e => {
