@@ -40,9 +40,11 @@ export class BuchungForm extends Component {
         this.setState({ [data.name]: data.value });
     }
 
-    onBeschreibungChange = (e, data) => {
-        console.log(data.name, data.value)
-        this.setState({ [data.name]: data.value })
+    onBeschreibungChange = (event, data) => {
+        console.log(data.value)
+        console.log(data.name)
+        console.log(event.target.textContent)
+        this.setState({ [data.name]: event.target.textContent })
         const buchung = this.props.buchungen.find(x => x.id === data.value)
     }
 
