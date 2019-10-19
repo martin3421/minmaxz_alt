@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Button, Form, Dropdown } from 'semantic-ui-react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addBuchung, getBuchungen } from "../../../actions/buchungen";
+import { addBuchung } from "../../../actions/buchungen";
+import { getBuchungenListe } from "../../../actions/buchungen_liste";
 import { getKonten } from "../../../actions/konten";
 
 export class BuchungForm extends Component {
@@ -17,12 +18,12 @@ export class BuchungForm extends Component {
     static propTypes = {
         addBuchung: PropTypes.func.isRequired,
         getKonten: PropTypes.func.isRequired,
-        getBuchungen: PropTypes.func.isRequired
+        getBuchungenListe: PropTypes.func.isRequired
     };
 
     componentDidMount() {
         this.props.getKonten();
-        this.props.getBuchungen();
+        this.props.getBuchungenListe();
     }
 
     onChange = e => this.setState({
@@ -45,7 +46,7 @@ export class BuchungForm extends Component {
         console.log(data.name)
         console.log(event.target.textContent)
         this.setState({ [data.name]: event.target.textContent })
-        const buchung = this.props.buchungen.find(x => x.id === data.value)
+        const buchung = this.props.buchungen_liste.find(x => x.id === data.value)
     }
 
     onSubmit = e => {
@@ -71,7 +72,7 @@ export class BuchungForm extends Component {
                 value: konto.id
             }
         ))
-        const beschreibungOptions = this.props.buchungen.map(buchung => (
+        const beschreibungOptions = this.props.buchungen_liste.map(buchung => (
             {
                 key: buchung.id,
                 text: buchung.beschreibung,
@@ -143,10 +144,10 @@ export class BuchungForm extends Component {
 
 const mapStateToProps = state => ({
     konten: state.konten.konten,
-    buchungen: state.buchungen.buchungen
+    buchungen_liste: state.buchungen_liste.buchungen_liste
 });
 
 export default connect(
     mapStateToProps,
-    { getBuchungen, getKonten, addBuchung }
+    { getBuchungenListe, getKonten, addBuchung }
 )(BuchungForm);
