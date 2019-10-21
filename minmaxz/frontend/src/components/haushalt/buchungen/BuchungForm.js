@@ -58,6 +58,7 @@ export class BuchungForm extends Component {
     onSubmit = e => {
         e.preventDefault();
         const { datum, konto1, konto2, beschreibung, betrag } = this.state;
+        console.log(beschreibung)
         const buchung = { datum, konto1, konto2, beschreibung, betrag };
         this.props.addBuchung(buchung);
         this.setState({
