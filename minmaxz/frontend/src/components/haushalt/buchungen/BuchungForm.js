@@ -26,6 +26,7 @@ export class BuchungForm extends Component {
     componentDidMount() {
         this.props.getKonten();
         this.props.getBuchungenListe();
+        console.log(this.props.buchungen_liste)
     }
 
     onChange = e => this.setState({
@@ -34,11 +35,7 @@ export class BuchungForm extends Component {
     });
 
     handleAddition = (event, data) => {
-        console.log(data.name)
-        console.log(data.value)
-        this.setState((prevState) => ({
-            beschreibung: data.value,
-        }))
+        console.log(this.props)
     }
 
     onKontoChange = (e, data) => {
