@@ -21,6 +21,7 @@ import { Provider } from "react-redux";
 import store from "../store";
 
 import { loadUser } from "../actions/auth";
+import Kontoboard from './haushalt/konten/Kontoboard';
 
 // Alert Options
 const alertOptions = {
@@ -44,6 +45,7 @@ export class App extends Component {
                             <Container>
                                 <Switch>
                                     <PrivateRoute exact path="/" component={Dashboard} />
+                                    <PrivateRoute exact path="/konten" component={Kontoboard} />
                                     <Route exact path="/register" component={Register} />
                                     <Route exact path="/login" component={Login} />
                                 </Switch>

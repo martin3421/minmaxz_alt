@@ -14,7 +14,7 @@ export class BuchungForm extends Component {
         konto2: "",
         beschreibung: "",
         beschreibung_val: "",
-        betrag: ""
+        betrag: "",
     }
 
     static propTypes = {
@@ -26,7 +26,6 @@ export class BuchungForm extends Component {
     componentDidMount() {
         this.props.getKonten();
         this.props.getBuchungenListe();
-        console.log(this.props.buchungen_liste)
     }
 
     onChange = e => this.setState({
@@ -34,8 +33,26 @@ export class BuchungForm extends Component {
             e.target.value
     });
 
-    handleAddition = (event, data) => {
-        console.log(this.props)
+    handleAddition = (e, data) => {
+        //this.setState((prevState) => ({
+        //  beschreibungOptions: [{ text: value, value }, ...prevState.beschreibungOptions],
+        //}))
+        const buchungen_anzahl = this.props.buchungen_liste.length + 1;
+        const buchung_1 = {
+            id: buchungen_anzahl,
+            datum: '',
+            beschreibung: data.value,
+            betrag: 0,
+            konto1: 0,
+            konto2: 0,
+            konto1_name: '',
+            konto2_name: ''
+        }
+        this.props.buchungen_liste.push(buchung_1);
+        this.setState({
+            beschreibung_val: buchungen_anzahl,
+            beschreibung: data.value
+        })
     }
 
     onKontoChange = (e, data) => {
@@ -47,7 +64,10 @@ export class BuchungForm extends Component {
         if (typeof buchung_1 !== "undefined") {
             this.setState({
                 beschreibung_val: data.value,
-                beschreibung: buchung_1.beschreibung
+                beschreibung: buchung_1.beschreibung,
+                konto1: buchung_1.konto1,
+                konto2: buchung_1.konto2,
+                betrag: buchung_1.betrag
             })
         }
     }
@@ -55,7 +75,6 @@ export class BuchungForm extends Component {
     onSubmit = e => {
         e.preventDefault();
         const { datum, konto1, konto2, beschreibung, betrag } = this.state;
-        console.log(beschreibung)
         const buchung = { datum, konto1, konto2, beschreibung, betrag };
         this.props.addBuchung(buchung);
         this.setState({
@@ -69,7 +88,7 @@ export class BuchungForm extends Component {
     };
 
     render() {
-        const { datum, betrag, beschreibung_val } = this.state;
+        const { datum, betrag, beschreibung_val, konto1, konto2 } = this.state;
         const kontoOptions = this.props.konten.map(konto => (
             {
                 key: konto.id,
@@ -77,7 +96,6 @@ export class BuchungForm extends Component {
                 value: konto.id
             }
         ))
-
         const beschreibungOptions = this.props.buchungen_liste.map(buchung => (
             {
                 key: buchung.id,
@@ -118,6 +136,7 @@ export class BuchungForm extends Component {
                                 fluid
                                 search
                                 selection
+                                value={konto2}
                                 onChange={this.onKontoChange}
                                 placeholder='Select your konto'
                                 options={kontoOptions}
@@ -130,6 +149,7 @@ export class BuchungForm extends Component {
                                 fluid
                                 search
                                 selection
+                                value={konto1}
                                 onChange={this.onKontoChange}
                                 placeholder='Select your konto'
                                 options={kontoOptions}

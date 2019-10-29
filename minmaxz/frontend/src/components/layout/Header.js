@@ -24,7 +24,7 @@ export class Header extends Component {
         const authLinks = (
             <Menu.Menu position="right">
                 <Menu.Item>
-                {user ? `Welcome ${user.username}` : ""}
+                    {user ? `Welcome ${user.username}` : ""}
                 </Menu.Item>
                 <Menu.Item
                     name="logout"
@@ -52,6 +52,16 @@ export class Header extends Component {
             </Menu.Menu>
         );
 
+        const userMenu = (
+            <Menu.Item
+                as={Link}
+                name='konten'
+                to="/konten"
+                active={activeItem === 'konten'}
+                onClick={this.handleItemClick}
+            />
+        );
+
         return (
             <Segment inverted>
                 <Menu inverted pointing secondary>
@@ -60,6 +70,7 @@ export class Header extends Component {
                         active={activeItem === 'home'}
                         onClick={this.handleItemClick}
                     />
+                    {isAuthenticated ? userMenu : ""}
                     {isAuthenticated ? authLinks : guestLinks}
                 </Menu>
 

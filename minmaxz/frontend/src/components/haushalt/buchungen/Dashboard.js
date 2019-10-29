@@ -8,6 +8,5 @@ export default function Dashboard() {
             <Buchungen />
             <BuchungForm />
         </Fragment>
-
     )
 }

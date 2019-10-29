@@ -5,13 +5,16 @@ from .serializers import BuchungSerializer, KontoSerializer
 
 class BuchungenListe(viewsets.ModelViewSet):
     permission_classes = [
-        permissions.IsAuthenticated,
+        permissions.AllowAny,
     ]
     serializer_class = BuchungSerializer
 
     def get_queryset(self):
-        return Buchung.objects.filter(konto1__owner=self.request.user).\
+        buchungen = Buchung.objects.filter(konto1__owner=1).\
             order_by('beschreibung', '-datum').distinct('beschreibung')
+        for idx, buchung in enumerate(buchungen):
+            buchungen[idx].id = idx
+        return buchungen
 
 
 class BuchungViewSet(viewsets.ModelViewSet):
