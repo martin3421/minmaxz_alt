@@ -44,14 +44,20 @@ const level1Panels = [
     </div>
   )
   
-  const rootPanels = [
-    { key: 'panel-1', title: 'Aktiva', content: { content: Level1Content } },
-    { key: 'panel-2', title: 'Aufwendungen', content: { content: Level2Content } },
-  ]
+  function rootPanels (konto_1) {
+    const kontoPanels = konto_1.map((konto, idx) => (
+      {
+          key: 'panel-' + idx.toString(),
+          title: konto.name,
+          content: konto.name
+      }
+  ))
+    return kontoPanels
+  }
 
 export class Konten extends Component {
 
-    state = { activeIndex: 0 }
+    state = { activeIndex: -1 }
 
     static propTypes = {
         konten: PropTypes.array.isRequired,
@@ -72,11 +78,13 @@ export class Konten extends Component {
 
     render() {
         const { activeIndex } = this.state
+        const konto_1 = this.props.konten.filter(x => x.elternkonto === null)
+        const panels = rootPanels(konto_1);
 
         return (
             <Accordion
             activeIndex={activeIndex}
-            panels={rootPanels}
+            panels={panels}
             styled
             onTitleClick={this.handleClick}
           />
