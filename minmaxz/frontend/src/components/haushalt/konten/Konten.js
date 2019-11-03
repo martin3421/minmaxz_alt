@@ -3,57 +3,89 @@ import { Accordion, Icon, List } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import PropTypes from "prop-types";
 import { getKonten } from "../../../actions/konten";
-  
-  const Level1aaContent = (
+
+const Level1aaContent = (
     <List>
-    <List.Item>DKB</List.Item>
-    <List.Item>Sparkasse</List.Item>
+        <List.Item>DKB</List.Item>
+        <List.Item>Sparkasse</List.Item>
     </List>
-  )
+)
 
 const level1aPanels = [
-    { key: 'panel-1ab', title: 'Girokonto', content: {content: Level1aaContent} },
-  ]
-  
-  const Level1aContent = (
+    { key: 'panel-1ab', title: 'Girokonto', content: { content: Level1aaContent } },
+]
+
+const Level1aContent = (
     <List>
-    <List.Item>Bargeld</List.Item>
-    <List.Item><Accordion.Accordion panels={level1aPanels} /></List.Item>
+        <List.Item>Bargeld</List.Item>
+        <List.Item><Accordion.Accordion panels={level1aPanels} /></List.Item>
     </List>
-  )
+)
 
 const level1Panels = [
-    { key: 'panel-1a', title: 'Barvermögen', content: {content: Level1aContent} },
+    { key: 'panel-1a', title: 'Barvermögen', content: { content: Level1aContent } },
     { key: 'panel-ba', title: 'Geldanlagen', content: 'Level 1B Contents' },
-  ]
-  
-  const Level1Content = (
+]
+
+const Level1Content = (
     <div>
-      <Accordion.Accordion panels={level1Panels} />
+        <Accordion.Accordion panels={level1Panels} />
     </div>
-  )
-  
-  const level2Panels = [
+)
+
+const level2Panels = [
     { key: 'panel-2a', title: 'Level 2A', content: 'Level 2A Contents' },
     { key: 'panel-2b', title: 'Level 2B', content: 'Level 2B Contents' },
-  ]
-  
-  const Level2Content = (
+]
+
+const Level2Content = (
     <div>
-      <Accordion.Accordion panels={level2Panels} />
+        <Accordion.Accordion panels={level2Panels} />
     </div>
-  )
-  
-  function rootPanels (konto_1) {
-    const kontoPanels = konto_1.map((konto, idx) => (
-      {
-          key: 'panel-' + idx.toString(),
-          title: konto.name,
-          content: konto.name
-      }
-  ))
+)
+
+function rootPanels(konten) {
+    const konto_0 = konten.filter(x => x.elternkonto === null)
+    const kontoPanels = [];
+    let i = 0;
+    for (const konto of konto_0) {
+        let panel_content;
+        const konto_1 = konten.filter(x => x.elternkonto === konto.id)
+        if (typeof konto_1 !== "undefined") {
+            const konto1Panels = [];
+            let j = 0;
+            for (const konto1 of konto_1) {
+                konto1Panels.push(
+                    {
+                        key: 'panel-' + j.toString(),
+                        title: konto1.name,
+                        content: konto1.name
+                    }
+                )
+                j++;
+            }
+            const Level2Content = (
+                <div>
+                    <Accordion.Accordion panels={konto1Panels} />
+                </div>
+            )
+            panel_content = { content: Level2Content };
+        }
+        else {
+            panel_content = konto.name;
+        }
+
+        kontoPanels.push(
+            {
+                key: 'panel-' + i.toString(),
+                title: konto.name,
+                content: panel_content
+            }
+        )
+        i++;
+    }
     return kontoPanels
-  }
+}
 
 export class Konten extends Component {
 
@@ -78,16 +110,16 @@ export class Konten extends Component {
 
     render() {
         const { activeIndex } = this.state
-        const konto_1 = this.props.konten.filter(x => x.elternkonto === null)
-        const panels = rootPanels(konto_1);
+        const konten = this.props.konten;
+        const panels = rootPanels(konten);
 
         return (
             <Accordion
-            activeIndex={activeIndex}
-            panels={panels}
-            styled
-            onTitleClick={this.handleClick}
-          />
+                activeIndex={activeIndex}
+                panels={panels}
+                styled
+                onTitleClick={this.handleClick}
+            />
         )
     }
 }
