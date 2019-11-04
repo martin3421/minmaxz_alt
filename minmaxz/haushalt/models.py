@@ -43,6 +43,7 @@ class Konto(models.Model):
     kontotyp = models.ForeignKey(KontoTyp, on_delete=models.CASCADE)
     elternkonto = models.ForeignKey('self', on_delete=models.CASCADE,
                                     null=True, blank=True, related_name='eltern_konto')
+    ebene = models.IntegerField()
     name = models.CharField(max_length=100)
     beschreibung = models.CharField(max_length=100, null=True, blank=True)
     devise_wertpapier = models.ForeignKey(
