@@ -46,10 +46,35 @@ const Level2Content = (
 
 function rootPanels(konten) {
     let kontoPanels;
-    for (let i = 4; i > 0; i--) {
-        const konto_e = konten.filter(x => x.ebene === i)
-        console.log(konto_e)
-    }
+    const konto_3 = konten.filter(x => x.ebene === 3);
+    let content_dict = {};
+    konto_3.forEach(konto => {
+        const children = konten.filter(x => x.elternkonto === konto.id)
+        if (typeof children !== "undefined") {
+            const childPanels = [];
+            let j = 0;
+            for (const child of children) {
+                childPanels.push(
+                    {
+                        key: 'panel-' + j.toString(),
+                        title: child.name,
+                        content: child.name
+                    }
+                )
+                j++;
+            }
+            const ChildContent = (
+                <div>
+                    <Accordion.Accordion panels={childPanels} />
+                </div>
+            )
+            console.log(content_dict)
+            content_dict[konto.id] = { content: ChildContent };
+        }
+    });
+    console.log(content_dict)
+    //for (let i = 4; i > 0; i--) {
+    //}
 
 
     return kontoPanels
