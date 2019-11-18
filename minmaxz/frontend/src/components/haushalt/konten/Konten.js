@@ -45,7 +45,6 @@ const Level2Content = (
 )
 
 function rootPanels(konten) {
-    let kontoPanels;
     const konto_3 = konten.filter(x => x.ebene === 3);
     let content_dict = {};
     konto_3.forEach(konto => {
@@ -68,16 +67,63 @@ function rootPanels(konten) {
                     <Accordion.Accordion panels={childPanels} />
                 </div>
             )
-            console.log(content_dict)
             content_dict[konto.id] = { content: ChildContent };
         }
     });
-    console.log(content_dict)
-    //for (let i = 4; i > 0; i--) {
-    //}
+    for (let i = 2; i > 0; i--) {
+        const konten_ebene = konten.filter(x => x.ebene === i);
+        const elternkonten = [...new Set(konten_ebene.map(item => item.elternkonto))];
+        elternkonten.forEach(elternkonto_id =>{
+            const konto_gruppe = konten_ebene.filter(x => x.elternkonto === elternkonto_id)
+            const childPanels = [];
+            let j = 0;
+            konto_gruppe.forEach(konto => {
+                const konto_children = content_dict[konto.id]
+                let child_content;
+                if (typeof konto_children !== "undefined") {
+                    child_content = konto_children;
+                }else{
+                    child_content = konto.name;
+                }
+                childPanels.push(
+                    {
+                        key: 'panel-' + j.toString(),
+                        title: konto.name,
+                        content: child_content
+                    }
+                )
+                j++;
+            })
+            const ChildContent = (
+                <div>
+                    <Accordion.Accordion panels={childPanels} />
+                </div>
+            )
+            content_dict[elternkonto_id] = { content: ChildContent };
+        })
+    }
+    const konten_0 = konten.filter(x => x.ebene === 0);
+    const childPanels = [];
+    let j = 0;
+    konten_0.forEach(konto =>{
+        const konto_children = content_dict[konto.id]
+                let child_content;
+                if (typeof konto_children !== "undefined") {
+                    child_content = konto_children;
+                }else{
+                    child_content = konto.name;
+                }
+                childPanels.push(
+                    {
+                        key: 'panel-' + j.toString(),
+                        title: konto.name,
+                        content: child_content
+                    }
+                )
+                j++;
+        })
 
-
-    return kontoPanels
+    return childPanels
 }
 
 export class Konten extends Component {
