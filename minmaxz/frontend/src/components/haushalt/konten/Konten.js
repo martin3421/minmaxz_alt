@@ -4,10 +4,19 @@ import { connect } from 'react-redux'
 import PropTypes from "prop-types";
 import { getKonten } from "../../../actions/konten";
 
+const item1 = (
+    <List.Item key="1">Girokonto</List.Item>
+)
+const item2 = (
+    <List.Item key="2">Bargeld</List.Item>
+)
+const item3 = (
+    <List.Item key="3">Kreditkarte</List.Item>
+)
+const my_items = [item1, item2, item3];
 const Level1aaContent = (
     <List>
-        <List.Item>DKB</List.Item>
-        <List.Item>Sparkasse</List.Item>
+        {my_items}
     </List>
 )
 
@@ -27,50 +36,29 @@ const level1Panels = [
     { key: 'panel-ba', title: 'Geldanlagen', content: 'Level 1B Contents' },
 ]
 
-const Level1Content = (
-    <div>
-        <Accordion.Accordion panels={level1Panels} />
-    </div>
-)
-
-const level2Panels = [
-    { key: 'panel-2a', title: 'Level 2A', content: 'Level 2A Contents' },
-    { key: 'panel-2b', title: 'Level 2B', content: 'Level 2B Contents' },
-]
-
-const Level2Content = (
-    <div>
-        <Accordion.Accordion panels={level2Panels} />
-    </div>
-)
-
 function rootPanels(konten) {
-    const konto_3 = konten.filter(x => x.ebene === 3);
+    const max_depth = Math.max.apply(Math,konten.map(function(o){return o.ebene;}))
+    const konto_max = konten.filter(x => x.ebene === max_depth);
     let content_dict = {};
-    konto_3.forEach(konto => {
+    konto_max.forEach(konto => {
         const children = konten.filter(x => x.elternkonto === konto.id)
         if (typeof children !== "undefined") {
-            const childPanels = [];
-            let j = 0;
-            for (const child of children) {
-                childPanels.push(
-                    {
-                        key: 'panel-' + j.toString(),
-                        title: child.name,
-                        content: child.name
-                    }
-                )
-                j++;
-            }
+            const child_list = (
+                <List>
+                    {children.map(child => (
+                        <List.Item key={child.id}>{child.name}</List.Item>
+                    ))}
+                </List>
+            )
             const ChildContent = (
-                <div>
-                    <Accordion.Accordion panels={childPanels} />
-                </div>
+                <List>
+                    {child_list}
+                </List>
             )
             content_dict[konto.id] = { content: ChildContent };
         }
     });
-    for (let i = 2; i > 0; i--) {
+    for (let i = max_depth - 1; i > 0; i--) {
         const konten_ebene = konten.filter(x => x.ebene === i);
         const elternkonten = [...new Set(konten_ebene.map(item => item.elternkonto))];
         elternkonten.forEach(elternkonto_id =>{
@@ -155,7 +143,7 @@ export class Konten extends Component {
         return (
             <Accordion
                 activeIndex={activeIndex}
-                panels={panels}
+                panels={level1Panels}
                 styled
                 onTitleClick={this.handleClick}
             />
