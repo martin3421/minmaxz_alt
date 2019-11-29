@@ -5,57 +5,79 @@ import PropTypes from "prop-types";
 import { getKonten } from "../../../actions/konten";
 
 const item1 = (
-    <List.Item key="1">Girokonto</List.Item>
+    <List.Item key="1">"COMS.-MSCI WORL.T.U.ETFI"</List.Item>
 )
 const item2 = (
-    <List.Item key="2">Bargeld</List.Item>
+    <List.Item key="2">"IS EUR.PROP.YI.U.ETF EOD"</List.Item>
 )
 const item3 = (
-    <List.Item key="3">Kreditkarte</List.Item>
+    <List.Item key="3">"ISHS Aktienfond"</List.Item>
 )
-const my_items = [item1, item2, item3];
-const Level1aaContent = (
+const item4 = (
+    <List.Item key="4">"LY.MSCI"</List.Item>
+)
+const my_items = [item1, item2, item3, item4];
+const ek10_children = (
     <List>
         {my_items}
     </List>
 )
-
-const level1aPanels = [
-    { key: 'panel-1ab', title: 'Girokonto', content: { content: Level1aaContent } },
+const kt10_panels = [
+    { key: 'panel-1ab', title: 'Aktienfond', content: { content: ek10_children } },
 ]
 
-const Level1aContent = (
+const kt10_content = (
     <List>
-        <List.Item>Bargeld</List.Item>
-        <List.Item><Accordion.Accordion panels={level1aPanels} /></List.Item>
+        <List.Item>Aktie</List.Item>
+        <List.Item><Accordion.Accordion panels={kt10_panels} /></List.Item>
+        <List.Item>Bond</List.Item>
+    </List>
+)
+
+const kt8_panels = [
+    { key: 'panel-1ab', title: 'Aktienfond', content: { content: kt10_content } },
+]
+
+const kt8_content = (
+    <List>
+        <List.Item><Accordion.Accordion panels={kt8_panels} /></List.Item>
+    </List>
+)
+
+const kt7_panels = [
+    { key: 'panel-1ab', title: 'Geldanlage', content: { content: kt8_content } },
+]
+
+const kt1_content = (
+    <List>
+        <List.Item>Barvermögen</List.Item>
+        <List.Item><Accordion.Accordion panels={kt7_panels} /></List.Item>
+        <List.Item>Mietkaution</List.Item>
     </List>
 )
 
 const level1Panels = [
-    { key: 'panel-1a', title: 'Barvermögen', content: { content: Level1aContent } },
-    { key: 'panel-ba', title: 'Geldanlagen', content: 'Level 1B Contents' },
+    { key: 'panel-1a', title: 'Aktiva', content: { content: kt1_content } },
+    { key: 'panel-ba', title: 'Fremdkapital', content: 'Level 1B Contents' },
 ]
 
 function rootPanels(konten) {
     const max_depth = Math.max.apply(Math,konten.map(function(o){return o.ebene;}))
-    const konto_max = konten.filter(x => x.ebene === max_depth);
     let content_dict = {};
-    konto_max.forEach(konto => {
-        const children = konten.filter(x => x.elternkonto === konto.id)
-        if (typeof children !== "undefined") {
-            const child_list = (
-                <List>
-                    {children.map(child => (
-                        <List.Item key={child.id}>{child.name}</List.Item>
-                    ))}
-                </List>
-            )
-            const ChildContent = (
-                <List>
-                    {child_list}
-                </List>
-            )
-            content_dict[konto.id] = { content: ChildContent };
+    const konten_ebene = konten.filter(x => x.ebene === 3);
+    konten_ebene.forEach(elternkonto =>{
+        const kinder_konten = konten.filter(x => x.elternkonto === elternkonto.id)
+        console.log('Parent:', elternkonto.name)
+        if (typeof kinder_konten !== 'undefined' && kinder_konten.length > 0) {
+            kinder_konten.forEach(kinder_konto =>{
+                console.log('Kind:', kinder_konto.name)
+                const child_content = content_dict[kinder_konten.id]
+                if (typeof child_content !== "undefined") {
+                    console.log('content')
+                }else{
+                    console.log('kein content')
+                }
+            })
         }
     });
     for (let i = max_depth - 1; i > 0; i--) {
@@ -110,7 +132,10 @@ function rootPanels(konten) {
                 )
                 j++;
         })
+    
+    
 
+    const childPanels = [];
     return childPanels
 }
 
@@ -143,7 +168,7 @@ export class Konten extends Component {
         return (
             <Accordion
                 activeIndex={activeIndex}
-                panels={level1Panels}
+                panels={panels}
                 styled
                 onTitleClick={this.handleClick}
             />
