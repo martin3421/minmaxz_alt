@@ -3,19 +3,6 @@ import { Button, Form, Dropdown } from 'semantic-ui-react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addKonto } from "../../../actions/konten";
-import { getKonten } from "../../../actions/konten";
-
-const kontoTypOptions = [
-    { key: 1, value: 1, text: 'Asset' },
-    { key: 2, value: 2, text: 'Cash' },
-    { key: 3, value: 3, text: 'Bank' },
-    { key: 4, value: 4, text: 'Mutual' },
-    { key: 5, value: 5, text: 'Liability' },
-    { key: 6, value: 6, text: 'Credit' },
-    { key: 7, value: 7, text: 'Income' },
-    { key: 8, value: 8, text: 'Expense' },
-    { key: 9, value: 9, text: 'Equity' }
-]
 
 export class KontoForm extends Component {
 
@@ -53,7 +40,7 @@ export class KontoForm extends Component {
 
     onCheckboxChange = (e, data) => {
         this.setState({
-            [data.name]: data.checked,
+            [data.name]: data.checked
         });
     }
 
@@ -89,7 +76,7 @@ export class KontoForm extends Component {
     };
 
     render() {
-        const { name, beschreibung, elternkonto, kontotyp, platzhalter, steuerrelevant } = this.state;
+        const { name, beschreibung, elternkonto, kontotyp, steuerrelevant, platzhalter } = this.state;
         const kontoOptions = this.props.konten.map(konto => (
             {
                 key: konto.id,
