@@ -2,29 +2,31 @@ import React, { Component } from 'react'
 import { Button, Form, Dropdown } from 'semantic-ui-react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addKonto } from "../../../actions/konten";
+import { getDevisenWertpapiere } from "../../../actions/devisenwertpapiere";
 
-export class KontoForm extends Component {
+const wertpapierTypOptions = [
+    { key: 1, value: 1, text: 'Asset' },
+    { key: 2, value: 2, text: 'Cash' }
+]
+
+export class DeviseWertpapierForm extends Component {
 
     state = {
         name: "",
-        beschreibung: "",
-        steuerrelevant: false,
-        platzhalter: false,
-        devise_wertpapier: 1,
-        elternkonto: "",
-        kontotyp: "",
-        ebene: ""
+        anzeigesymbol: "",
+        symbol: "",
+        stueckelung: "",
+        wertpapiertyp: "",
+        elternkonto: ""
     }
 
     static propTypes = {
-        addKonto: PropTypes.func.isRequired,
-        getKonten: PropTypes.func.isRequired,
+        getDevisenWertpapiere: PropTypes.func.isRequired,
         auth: PropTypes.object.isRequired,
     };
 
     componentDidMount() {
-        this.props.getKonten();
+        this.props.getDevisenWertpapiere();
     }
 
     onChange = e => this.setState({
@@ -35,20 +37,6 @@ export class KontoForm extends Component {
     onKontoTypChange = (e, data) => {
         this.setState({
             [data.name]: data.value
-        });
-    }
-
-    onCheckboxChange = (e, data) => {
-        this.setState({
-            [data.name]: data.checked
-        });
-    }
-
-    onKontoChange = (e, data) => {
-        const konto_1 = this.props.konten.find(x => x.id === data.value)
-        this.setState({
-            [data.name]: data.value,
-            ebene: konto_1.ebene + 1
         });
     }
 
@@ -151,11 +139,11 @@ export class KontoForm extends Component {
 }
 
 const mapStateToProps = state => ({
-    konten: state.konten.konten,
+    devisenwertpapiere: state.devisenwertpapiere.devisenwertpapiere,
     auth: state.auth
 });
 
 export default connect(
     mapStateToProps,
-    { getKonten, addKonto }
-)(KontoForm);
+    { getDevisenWertpapiere }
+)(DeviseWertpapierForm);

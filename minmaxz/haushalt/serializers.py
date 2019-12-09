@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from haushalt.models import Buchung, Konto
+from haushalt.models import Buchung, Konto, DeviseWertpapier
 
 # Buchung Serializer
 
@@ -23,4 +23,11 @@ class BuchungSerializer(serializers.ModelSerializer):
 class KontoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Konto
+        fields = '__all__'
+
+
+# Devise/Wertpapier Serializer
+class DeviseWertpapierSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeviseWertpapier
         fields = '__all__'

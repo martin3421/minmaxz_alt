@@ -4,7 +4,7 @@ import { createMessage, returnErrors } from "./messages";
 import { GET_KONTEN, ADD_KONTO } from "./types";
 import { tokenConfig } from "./auth";
 
-// GET BUCHUNGEN
+// GET KONTEN
 export const getKonten = () => (dispatch, getState) => {
     axios
         .get("/haushalt/api/konten/", tokenConfig(getState))

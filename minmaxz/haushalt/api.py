@@ -1,6 +1,6 @@
-from haushalt.models import Buchung, Konto
+from haushalt.models import Buchung, Konto, DeviseWertpapier
 from rest_framework import viewsets, permissions
-from .serializers import BuchungSerializer, KontoSerializer
+from .serializers import BuchungSerializer, KontoSerializer, DeviseWertpapierSerializer
 
 
 class BuchungenListe(viewsets.ModelViewSet):
@@ -35,6 +35,19 @@ class KontoViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Konto.objects.filter(owner=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class DeviseWertpapierViewSet(viewsets.ModelViewSet):
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    serializer_class = DeviseWertpapierSerializer
+
+    def get_queryset(self):
+        return DeviseWertpapier.objects.filter(owner=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

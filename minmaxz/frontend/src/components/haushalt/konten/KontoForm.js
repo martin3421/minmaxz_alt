@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { Button, Form, Dropdown } from 'semantic-ui-react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addKonto } from "../../../actions/konten";
-import { getKonten } from "../../../actions/konten";
+import { addKonto, getKonten } from "../../../actions/konten";
+import { getDevisenWertpapiere } from "../../../actions/devisenwertpapiere";
 
 const kontoTypOptions = [
     { key: 1, value: 1, text: 'Asset' },
@@ -24,7 +24,7 @@ export class KontoForm extends Component {
         beschreibung: "",
         steuerrelevant: false,
         platzhalter: false,
-        devise_wertpapier: 1,
+        devise_wertpapier: "",
         elternkonto: "",
         kontotyp: "",
         ebene: ""
@@ -33,11 +33,13 @@ export class KontoForm extends Component {
     static propTypes = {
         addKonto: PropTypes.func.isRequired,
         getKonten: PropTypes.func.isRequired,
+        getDevisenWertpapiere: PropTypes.func.isRequired,
         auth: PropTypes.object.isRequired,
     };
 
     componentDidMount() {
         this.props.getKonten();
+        this.props.getDevisenWertpapiere();
     }
 
     onChange = e => this.setState({
@@ -81,7 +83,7 @@ export class KontoForm extends Component {
             beschreibung: "",
             steuerrelevant: false,
             platzhalter: false,
-            devise_wertpapier: 1,
+            devise_wertpapier: "",
             elternkonto: "",
             kontotyp: "",
             ebene: ""
@@ -89,12 +91,19 @@ export class KontoForm extends Component {
     };
 
     render() {
-        const { name, beschreibung, elternkonto, kontotyp, platzhalter, steuerrelevant } = this.state;
+        const { name, beschreibung, elternkonto, kontotyp, platzhalter, steuerrelevant, devise_wertpapier } = this.state;
         const kontoOptions = this.props.konten.map(konto => (
             {
                 key: konto.id,
                 text: konto.name,
                 value: konto.id
+            }
+        ))
+        const devisenwertpapiereOptions = this.props.devisenwertpapiere.map(devisewertpapier => (
+            {
+                key: devisewertpapier.id,
+                text: devisewertpapier.name,
+                value: devisewertpapier.id
             }
         ))
 
@@ -142,6 +151,21 @@ export class KontoForm extends Component {
                                 name="kontotyp" />
                         </Form.Field>
                     </Form.Group>
+                    <Form.Group>
+                        <Form.Field>
+                            <label>Devise/Wertpapier</label>
+                            <Dropdown
+                                fluid
+                                search
+                                selection
+                                value={devise_wertpapier}
+                                onChange={this.onKontoTypChange}
+                                placeholder='Devise/Wertpapier auswählen'
+                                options={devisenwertpapiereOptions}
+                                noResultsMessage='Konto nicht gefunden...'
+                                name="devisewertpapier" />
+                        </Form.Field>
+                    </Form.Group>
                     <Form.Group width='equal'>
                         <Form.Checkbox
                             label='Platzhalter Konto'
@@ -165,10 +189,11 @@ export class KontoForm extends Component {
 
 const mapStateToProps = state => ({
     konten: state.konten.konten,
+    devisenwertpapiere: state.devisenwertpapiere.devisenwertpapiere,
     auth: state.auth
 });
 
 export default connect(
     mapStateToProps,
-    { getKonten, addKonto }
+    { getKonten, addKonto, getDevisenWertpapiere }
 )(KontoForm);

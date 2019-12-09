@@ -24,6 +24,7 @@ def data_import(request, modus):
             #            print(typ)
             obj, created = DeviseWertpapierTyp.objects.get_or_create(
                 name=typ,
+                owner=request.user,
             )
         for index, row in konten.iterrows():
             #print(type(row['Beschreibung']), row['Beschreibung'])
@@ -44,7 +45,8 @@ def data_import(request, modus):
                     symbol=row['Devise/Wertpapier M'],
                     wertpapiertyp=DeviseWertpapierTyp.objects.get(
                         name='EUREX'),
-                    stueckelung=10000
+                    stueckelung=10000,
+                    owner=request.user
                 )
             if np.isnan(row['Kontonummer']):
                 konto_nr = None

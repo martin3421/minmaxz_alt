@@ -31,12 +31,17 @@ class DeviseWertpapier(models.Model):
         DeviseWertpapierTyp, on_delete=models.CASCADE)
     symbol = models.CharField(max_length=50, unique=True)
     stueckelung = models.IntegerField()
+    owner = models.ForeignKey(User, related_name='devisen_wertpapiere', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name_plural = 'Devisen/Wertpapiere'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'owner'], name="devise_wertpapier_owner")
+        ]
 
 
 class Konto(models.Model):

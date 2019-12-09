@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework import routers
-from .api import BuchungViewSet, KontoViewSet, BuchungenListe
+from .api import BuchungViewSet, KontoViewSet, BuchungenListe, DeviseWertpapierViewSet
 from . import views
 
 app_name = 'haushalt'
@@ -20,5 +20,10 @@ urlpatterns += router.urls
 
 router = routers.DefaultRouter()
 router.register('api/buchungen_liste', BuchungenListe, 'buchungen_liste')
+
+urlpatterns += router.urls
+
+router = routers.DefaultRouter()
+router.register('api/devisenwertpapiere', DeviseWertpapierViewSet, 'devisenwertpapiere')
 
 urlpatterns += router.urls
