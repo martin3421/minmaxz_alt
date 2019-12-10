@@ -163,7 +163,7 @@ export class KontoForm extends Component {
                                 placeholder='Devise/Wertpapier auswählen'
                                 options={devisenwertpapiereOptions}
                                 noResultsMessage='Konto nicht gefunden...'
-                                name="devisewertpapier" />
+                                name="devise_wertpapier" />
                         </Form.Field>
                     </Form.Group>
                     <Form.Group width='equal'>
