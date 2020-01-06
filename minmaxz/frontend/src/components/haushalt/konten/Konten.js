@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
-import { Accordion, Icon, List } from 'semantic-ui-react'
+import { Accordion, Button, List } from 'semantic-ui-react'
 import { connect } from 'react-redux'
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { getKonten } from "../../../actions/konten";
 
@@ -80,12 +81,18 @@ export class Konten extends Component {
         const panels = rootPanels(konten);
 
         return (
-            <Accordion
-                activeIndex={activeIndex}
-                panels={panels}
-                styled
-                onTitleClick={this.handleClick}
-            />
+            <Fragment>
+                <Accordion
+                    activeIndex={activeIndex}
+                    panels={panels}
+                    styled
+                    onTitleClick={this.handleClick}
+                />
+                <Link to="/konto_neu">
+                    <Button>Click Here</Button>
+                </Link>
+
+            </Fragment>
         )
     }
 }

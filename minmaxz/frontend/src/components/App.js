@@ -22,6 +22,7 @@ import store from "../store";
 
 import { loadUser } from "../actions/auth";
 import Kontoboard from './haushalt/konten/Kontoboard';
+import KontoDetail from './haushalt/konten/KontoDetail';
 
 // Alert Options
 const alertOptions = {
@@ -46,6 +47,8 @@ export class App extends Component {
                                 <Switch>
                                     <PrivateRoute exact path="/" component={Dashboard} />
                                     <PrivateRoute exact path="/konten" component={Kontoboard} />
+                                    <Route exact path={'/konto_neu'} component={KontoDetail} />
+                                    <Route exact path={'/konto/:id'} component={KontoDetail} />
                                     <Route exact path="/register" component={Register} />
                                     <Route exact path="/login" component={Login} />
                                 </Switch>

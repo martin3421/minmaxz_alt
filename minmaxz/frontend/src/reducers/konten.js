@@ -1,7 +1,8 @@
-import { GET_KONTEN, ADD_KONTO } from "../actions/types.js";
+import { GET_KONTEN, ADD_KONTO, GET_KONTO } from "../actions/types.js";
 
 const initialState = {
-    konten: []
+    konten: [],
+    konto: []
 };
 
 export default function (state = initialState, action) {
@@ -10,6 +11,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 konten: action.payload
+            };
+        case GET_KONTO:
+            return {
+                ...state,
+                konto: action.payload
             };
         case ADD_KONTO:
             return {

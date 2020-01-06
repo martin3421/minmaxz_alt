@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import { Button, Form, Dropdown } from 'semantic-ui-react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addKonto, getKonten } from "../../../actions/konten";
+import { addKonto, getKonten, getKonto } from "../../../actions/konten";
 import { getDevisenWertpapiere } from "../../../actions/devisenwertpapiere";
+import axios from "axios";
+import { tokenConfig } from "../../../actions/auth";
 
 const kontoTypOptions = [
     { key: 1, value: 1, text: 'Asset' },
@@ -33,6 +35,7 @@ export class KontoForm extends Component {
     static propTypes = {
         addKonto: PropTypes.func.isRequired,
         getKonten: PropTypes.func.isRequired,
+        getKonto: PropTypes.func.isRequired,
         getDevisenWertpapiere: PropTypes.func.isRequired,
         auth: PropTypes.object.isRequired,
     };
@@ -40,6 +43,29 @@ export class KontoForm extends Component {
     componentDidMount() {
         this.props.getKonten();
         this.props.getDevisenWertpapiere();
+        this.props.getKonto(40);
+        console.log(this.props)
+        const token = this.props.auth.token;
+
+        // Headers
+        const config = {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+
+        // If token, add to headers config
+        if (token) {
+            config.headers["Authorization"] = `Token ${token}`;
+        }
+        axios
+            .get(`/haushalt/api/konten/${40}/`, config)
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch(err =>
+                console.log(err)
+            );
     }
 
     onChange = e => this.setState({
@@ -92,6 +118,7 @@ export class KontoForm extends Component {
 
     render() {
         const { name, beschreibung, elternkonto, kontotyp, platzhalter, steuerrelevant, devise_wertpapier } = this.state;
+
         const kontoOptions = this.props.konten.map(konto => (
             {
                 key: konto.id,
@@ -189,11 +216,12 @@ export class KontoForm extends Component {
 
 const mapStateToProps = state => ({
     konten: state.konten.konten,
+    konto: state.konten.konto,
     devisenwertpapiere: state.devisenwertpapiere.devisenwertpapiere,
     auth: state.auth
 });
 
 export default connect(
     mapStateToProps,
-    { getKonten, addKonto, getDevisenWertpapiere }
+    { getKonten, getKonto, addKonto, getDevisenWertpapiere }
 )(KontoForm);

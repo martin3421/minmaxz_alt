@@ -29,12 +29,12 @@ class BuchungViewSet(viewsets.ModelViewSet):
 
 class KontoViewSet(viewsets.ModelViewSet):
     permission_classes = [
-        permissions.IsAuthenticated,
+        permissions.AllowAny,
     ]
     serializer_class = KontoSerializer
 
     def get_queryset(self):
-        return Konto.objects.filter(owner=self.request.user)
+        return Konto.objects.filter(owner=1)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
