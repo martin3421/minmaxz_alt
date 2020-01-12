@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { addKonto, getKonten, getKonto } from "../../../actions/konten";
 import { getDevisenWertpapiere } from "../../../actions/devisenwertpapiere";
 import axios from "axios";
-import { tokenConfig } from "../../../actions/auth";
 
 const kontoTypOptions = [
     { key: 1, value: 1, text: 'Asset' },
@@ -30,11 +29,14 @@ export class KontoForm extends Component {
         elternkonto: "",
         kontotyp: "",
         ebene: "",
+        load_data: true,
+        request_type: 'create',
     }
 
     static propTypes = {
         addKonto: PropTypes.func.isRequired,
         getKonten: PropTypes.func.isRequired,
+        getKonto: PropTypes.func.isRequired,
         getDevisenWertpapiere: PropTypes.func.isRequired,
         auth: PropTypes.object.isRequired,
     };
@@ -42,35 +44,22 @@ export class KontoForm extends Component {
     componentDidMount() {
         this.props.getKonten();
         this.props.getDevisenWertpapiere();
-        const token = this.props.auth.token;
-        // Headers
-        const config = {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        };
-        // If token, add to headers config
-        if (token) {
-            config.headers["Authorization"] = `Token ${token}`;
-        }
-
         if (typeof this.props.match.params.id !== "undefined") {
-            axios
-            .get(`/haushalt/api/konten/${this.props.match.params.id}/`, config)
-            .then(res => {
-                const konto_k = res.data;
-                this.setState = ({
-                    name: konto_k.name,
-                    beschreibung: konto_k.beschreibung,
-                    steuerrelevant: konto_k.steuerrelevant,
-                    platzhalter: konto_k.platzhalter,
-                    devise_wertpapier: konto_k.devise_wertpapier,
-                    elternkonto: konto_k.elternkonto,
-                    kontotyp: konto_k.kontotyp,
-                    ebene: konto_k.ebene,
-                })
+            this.props.getKonto(this.props.match.params.id)
+            this.setState({
+                load_data: true,
+                request_type: 'update',
+            })
+        } else {
+            this.setState({
+                load_data: false,
+                request_type: 'create',
             })
         }
+    }
+
+    kontoToState(konto_k) {
+        console.log(konto_k)
     }
 
     onChange = e => this.setState({
@@ -80,6 +69,7 @@ export class KontoForm extends Component {
 
     onKontoTypChange = (e, data) => {
         this.setState({
+            load_data: false,
             [data.name]: data.value
         });
     }
@@ -93,6 +83,7 @@ export class KontoForm extends Component {
     onKontoChange = (e, data) => {
         const konto_1 = this.props.konten.find(x => x.id === data.value)
         this.setState({
+            load_data: false,
             [data.name]: data.value,
             ebene: konto_1.ebene + 1
         });
@@ -122,6 +113,14 @@ export class KontoForm extends Component {
     };
 
     render() {
+        if (this.state.load_data) {
+            if (this.props.konto.length !== 0) {
+                const konto_k = this.props.konto
+                this.setState({
+                    load_data: false,
+                })
+            }
+        }
         const { name, beschreibung, elternkonto, kontotyp, platzhalter, steuerrelevant, devise_wertpapier } = this.state;
         const kontoOptions = this.props.konten.map(konto => (
             {
@@ -220,11 +219,12 @@ export class KontoForm extends Component {
 
 const mapStateToProps = state => ({
     konten: state.konten.konten,
+    konto: state.konten.konto,
     devisenwertpapiere: state.devisenwertpapiere.devisenwertpapiere,
     auth: state.auth
 });
 
 export default connect(
     mapStateToProps,
-    { getKonten, addKonto, getDevisenWertpapiere }
+    { getKonten, getKonto, addKonto, getDevisenWertpapiere }
 )(KontoForm);
